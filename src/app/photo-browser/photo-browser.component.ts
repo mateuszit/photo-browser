@@ -2,11 +2,11 @@ import {Component, OnInit} from "@angular/core";
 import {PhotoBrowserService} from "./photo-browser.service";
 import {Photo} from "./photo";
 import {Observable} from "rxjs";
-import {map} from "rxjs/operators/map";
 import {toArray} from "rxjs/operators/toArray";
+import {take} from "rxjs/operators/take";
 @Component({
   selector: 'app-photo-browser',
-  templateUrl: './photo-browser.html'
+  templateUrl: './photo-browser.html',
 })
 export class PhotoBrowserComponent implements OnInit {
 
@@ -16,6 +16,8 @@ export class PhotoBrowserComponent implements OnInit {
   limit = 10;
 
   photoStream: Observable<any>; //todo
+
+  searchQuery: string;
 
   constructor(private photoBrowserService: PhotoBrowserService) {}
 
@@ -39,18 +41,19 @@ export class PhotoBrowserComponent implements OnInit {
   }
 
   private getPhotoStream() {
-
-    console.log(this.photos[9]);
-    return Observable.range(0, this.limit)
+    return Observable.from(this.photos)
       .pipe(
-        map(index => this.photos[index]),
+        // map(index => this.photos[index]),
+        take(5),
         toArray()
       )
   }
 
   private onError(error) {
     console.error(error);
-
   }
 
+  onPaginationChanged(event) {
+    console.log(event);
+  }
 }
