@@ -8,7 +8,6 @@ import {AppRoutingModule} from "./app-routing.module";
 import {PhotoBrowserService} from "./photo-browser/photo-browser.service";
 import {HttpClientModule} from "@angular/common/http";
 import {FormsModule} from "@angular/forms";
-import {PaginationComponent} from "./photo-browser/pagination/pagination.component";
 import {PhotoComponent} from "./photo-browser/photo/photo.component";
 import {FilterPipe} from "./photo-browser/filter.pipe";
 
@@ -17,7 +16,6 @@ import {FilterPipe} from "./photo-browser/filter.pipe";
   declarations: [
     AppComponent,
     PhotoBrowserComponent,
-    PaginationComponent,
     PhotoComponent,
     FilterPipe
   ],

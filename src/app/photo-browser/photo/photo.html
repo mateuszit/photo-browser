@@ -1,0 +1,8 @@
+<div class="d-flex flex-row align-items-center" *ngIf="photo">
+  <div>
+    <img [src]="photo.thumbnailUrl">
+  </div>
+  <div class="p-3">
+    {{photo.title}}
+  </div>
+</div>

@@ -3,7 +3,9 @@ import {PhotoBrowserService} from "./photo-browser.service";
 import {Photo} from "./photo";
 import {Observable} from "rxjs";
 import {toArray} from "rxjs/operators/toArray";
-import {take} from "rxjs/operators/take";
+import {map} from "rxjs/operators/map";
+import {filter} from "rxjs/operators/filter";
+
 @Component({
   selector: 'app-photo-browser',
   templateUrl: './photo-browser.html',
@@ -14,13 +16,20 @@ export class PhotoBrowserComponent implements OnInit {
   photos: Photo[] = [];
   total = 0;
 
-  limit = 10;
-
-  photoStream: Observable<any>; //todo
+  limit = 5;
+  page = 0;
 
   searchQuery: string;
 
-  constructor(private photoBrowserService: PhotoBrowserService) {}
+  loaded = false;
+  error = false;
+
+  get totalPages(): number {
+    return Math.ceil(this.total / this.limit)
+  }
+
+  constructor(private photoBrowserService: PhotoBrowserService) {
+  }
 
   ngOnInit(): void {
     this.getPhotos();
@@ -37,24 +46,48 @@ export class PhotoBrowserComponent implements OnInit {
   private onLoad(response: Photo[]) {
     this.photos = response;
     this.total = response.length;
-
-    this.photoStream = this.getPhotoStream();
-  }
-
-  private getPhotoStream() {
-    return Observable.from(this.photos)
-      .pipe(
-        // map(index => this.photos[index]),
-        take(5),
-        toArray()
-      )
+    this.loaded = true;
   }
 
   private onError(error) {
     console.error(error);
+    this.loaded = true;
+    this.error = true;
+  }
+
+  private getPhotoStream() {
+    return Observable.range(this.page * this.limit, this.limit)
+      .pipe(
+        map(index => this.photos[index]),
+        filter(photo => this.filter(photo)),
+        toArray()
+      )
+  }
+
+  filter(photo: Photo) {
+    if(!this.searchQuery) {
+      return true;
+    }
+
+    return photo.title.indexOf(this.searchQuery) > -1;
   }
 
   onPaginationChanged(event) {
     console.log(event);
+  }
+
+  next() {
+    if (this.page === this.totalPages) {
+      return;
+    }
+
+    this.page += 1;
+  }
+
+  prev() {
+    if (this.page === 0) {
+      return;
+    }
+    this.page -= 1;
   }
 }
