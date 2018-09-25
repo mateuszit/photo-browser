@@ -7,6 +7,7 @@ import {take} from "rxjs/operators/take";
 @Component({
   selector: 'app-photo-browser',
   templateUrl: './photo-browser.html',
+  styleUrls: ['./photo-browser.scss']
 })
 export class PhotoBrowserComponent implements OnInit {
 
