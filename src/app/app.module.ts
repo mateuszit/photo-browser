@@ -5,6 +5,8 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import {PhotoBrowserComponent} from "./photo-browser/photo-browser.component";
 import {AppRoutingModule} from "./app-routing.module";
+import {PhotoBrowserService} from "./photo-browser/photo-browser.service";
+import {HttpClientModule} from "@angular/common/http";
 
 
 @NgModule({
@@ -14,9 +16,10 @@ import {AppRoutingModule} from "./app-routing.module";
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [PhotoBrowserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
