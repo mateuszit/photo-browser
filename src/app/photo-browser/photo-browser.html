@@ -18,9 +18,7 @@
 
 <section class="photos mt-5 mb-5" *ngIf="loaded; else loading">
 
-  <p *ngIf="((getPhotoStream() | async) | filter: 'title':searchQuery).length === 0">No result</p>
-
-  <app-photo *ngFor="let photo of (getPhotoStream() | async) | filter: 'title':searchQuery"
+  <app-photo *ngFor="let photo of (getPhotoStream() | async)"
              [photo]="photo">
   </app-photo>
 

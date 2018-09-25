@@ -5,6 +5,7 @@ import {Observable} from "rxjs";
 import {toArray} from "rxjs/operators/toArray";
 import {map} from "rxjs/operators/map";
 import {filter} from "rxjs/operators/filter";
+import {mergeMap} from "rxjs/operators/mergeMap";
 
 @Component({
   selector: 'app-photo-browser',
@@ -55,12 +56,19 @@ export class PhotoBrowserComponent implements OnInit {
     this.error = true;
   }
 
-  private getPhotoStream() {
-    return Observable.range(this.page * this.limit, this.limit)
+  private getPhotoStream(): Observable<Photo[]> {
+    return Observable.from(this.photos)
       .pipe(
-        map(index => this.photos[index]),
         filter(photo => this.filter(photo)),
-        toArray()
+        toArray(),
+        mergeMap(photos => {
+          this.total = photos.length;
+          return Observable.range(this.page * this.limit, this.limit)
+            .pipe(
+              map(index => photos[index]),
+              toArray()
+            )
+        })
       )
   }
 
@@ -69,15 +77,11 @@ export class PhotoBrowserComponent implements OnInit {
       return true;
     }
 
-    return photo.title.indexOf(this.searchQuery) > -1;
-  }
-
-  onPaginationChanged(event) {
-    console.log(event);
+    return photo.title.toLowerCase().indexOf(this.searchQuery.toLowerCase()) > -1;
   }
 
   next() {
-    if (this.page === this.totalPages) {
+    if (this.page === this.totalPages -1) {
       return;
     }
 
